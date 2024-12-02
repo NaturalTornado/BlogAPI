@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+</head>
+<body>
+  <% if (locals.user) { %>
+    <h1>Welcome back, <%= user.username %>!</h1>
+    <a href="/log-out">Log Out</a>
+
+    <!-- Display blog posts -->
+    <h2>Posts</h2>
+    <ul>
+      <% messages.forEach((msg) => { %>
+        <li>
+          <strong><%= msg.message_title %></strong><br>
+          <% if (user.user_type === 'member') { %>
+            <em>By: <%= msg.username %></em><br>
+          <% } else { %>
+            <em>By: Anonymous</em><br>
+          <% } %>
+          <p><%= msg.message %></p>
+          <small><%= msg.timestamp %></small>
+        </li>
+      <% }); %>
+    </ul>
+
+    <!-- Form to Add a New Message -->
+    <div>
+      <h3>Add a New Blog Post</h3>
+      <form action="/new-message" method="POST">
+        <label for="newMessageTitle">New Post Title</label>
+        <input type="text" id="newMessageTitle" name="newMessageTitle" required />
+
+        <label for="newMessage">Blog Post Content</label>
+        <textarea id="newMessage" name="newMessage" required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <!-- Button to become a member for users with 'user' user_type -->
+    <% if (user.user_type === 'user') { %>
+      <form action="/become-a-member" method="POST">
+        <h3>Become a Member</h3>
+        <label for="membershipPasscode">Enter the secret passcode:</label>
+        <input id="membershipPasscode" name="membershipPasscode" type="password" required />
+        <button>Submit</button>
+      </form>
+    <% } %>
+  <% } else { %>
+    <h1>Please log in</h1>
+    <form action="/log-in" method="POST">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" required />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required />
+      <button>Log In</button>
+    </form>
+    <a href="/sign-up">Sign Up Form</a>
+  <% } %>
+</body>
+</html>
